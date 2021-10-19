@@ -1,0 +1,46 @@
+
+    注意 注意 注意：
+
+    一、pubic void applyPayload(String url,long offset,long size,String[] headerKeyValuePairs)
+    url:升级包(Payload)的路径，ab升级只能使用内置存储，必须在目录 /data/ota_package/xxx
+    而且需要以file://开头，比如file://data/ota_package/update.zip
+
+    update engine只接受固定的路径/data/ota_package/update.zip，其他路径和sdcard不支持
+
+    offset:这是payload 在update.zip中的偏移量，需要从升级包文件中计算出来
+
+    Size:这是payload文件的大小，可以在payload_properties.txt中找到
+
+    headerKeyValuePairs:这是metadata,可以在升级包中的payload_properties.txt中找到
+
+   二、 如果adb push /data/ota_package/update.zip 目录下可以升级成功，而下载下来不可以，一般应该是seLiunx权限问题 可以ls -lZ查看下
+        在
+        /system/sepolicy/private/system_app.te
+        /system/sepolicy/prebuilts/api/28.0/private/system_app.te 加上下面两句
+
+        allow system_app ota_package_file:dir { read open write create remove_name search rename add_name getattr };
+        allow system_app ota_package_file:file { read write create open rename setattr getattr unlink };
+
+    /***************************************************************************************/
+    相关代码接口说明如下
+
+    一、framwork层 应用接口
+
+    源代码位置：framwork/base/core/java/android/os/UpdateEngine.java
+    framwork/base/core/java/android/os/UpdateEngineCallback.java
+
+    二、app应用调取applyUpdate方法我这里只说一下大致流程
+
+    当然得系统权限的App了，需要系统签名，这些Api也是@SystemApi的
+
+    1、创建 UpdateEngineCallback 的对象 mUpdateEngineCallback
+
+    2、创建 UpdateEngine 的对象 mUpdateEngine, 创建后服务开启
+
+    3、使用mUpdateEngine.bind(mUpdateEngineCallback) 因为bind方法时接受的callback对象，而我们创建的类继承了callback,传入当前类的对象即可
+
+    4、调用 applyPayload(String url,long offset,long size,String[] headerKeyValuePairs) 方法具体执行升级
+
+    5、在重写的onStatusUpdate(int status, float percent)方法中根据拿到的状态执行进度逻辑
+
+    在重写的onPayloadApplicationComplete(int errorCode);方法中执行升级完成后的逻辑
