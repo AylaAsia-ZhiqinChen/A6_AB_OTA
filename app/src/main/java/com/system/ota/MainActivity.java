@@ -5,10 +5,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -69,9 +71,9 @@ import java.io.OutputStream;
 
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final String TAG = "AB ota MainActivity";
-    private Button abOTA;
+//    private Button abOTA;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0;
     private static final String[] REQUIRED_STORAGE_PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -84,25 +86,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkSelfPermission ===false");
             ActivityCompat.requestPermissions(this, REQUIRED_STORAGE_PERMISSIONS, STORAGE_PERMISSIONS_REQUEST_CODE);
         } else {
             Log.d(TAG, "checkSelfPermission ===true");
         }
-        setContentView(R.layout.activity_main);
-        initView();
+
+//        setContentView(R.layout.activity_main);
+//        initView();
+
+        startOTA();
     }
 
-    private void initView() {
-        abOTA = findViewById(R.id.ab_ota);
-        abOTA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startOTA();
-            }
-        });
-    }
+//    private void initView() {
+//        abOTA = findViewById(R.id.ab_ota);
+//        abOTA.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startOTA();
+//            }
+//        });
+//    }
 
     private void startOTA() {
         File otaFile = new File(otaFilePath);
@@ -176,5 +183,40 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "ex=" + ex);
             return -1;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onDestroy");
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onStop");
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "onResume");
+
+        finish();
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
