@@ -56,7 +56,7 @@ public class SystemUpdateManager {
                 Log.d(TAG, "UPDATE SUCCESS!");
             } else {
                 Looper.prepare();
-                Toast.makeText(mContext,"升级包错误", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "升级包错误", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
         }
@@ -74,9 +74,9 @@ public class SystemUpdateManager {
      */
     private void rebootNow() {
         Looper.prepare();
-        Toast.makeText(mContext,"升级完成，马上将重启手机，完成初始化！", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "升级完成，马上将重启手机，完成初始化！", Toast.LENGTH_LONG).show();
         Log.d(TAG, "rebootNow");
-        PowerManager pManager=(PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        PowerManager pManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         pManager.reboot("reboot-ab-update");
         Looper.loop();
     }
