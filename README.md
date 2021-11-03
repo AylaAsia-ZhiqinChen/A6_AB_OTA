@@ -1,0 +1,2 @@
+# A6_AB_OTA
+A6 AB分区 OTA APK
