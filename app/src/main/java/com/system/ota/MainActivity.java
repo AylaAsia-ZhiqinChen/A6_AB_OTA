@@ -1,18 +1,15 @@
 package com.system.ota;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -73,7 +70,7 @@ import java.io.OutputStream;
 
 public class MainActivity extends Activity {
     private static final String TAG = "AB ota MainActivity";
-//    private Button abOTA;
+    //    private Button abOTA;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0;
     private static final String[] REQUIRED_STORAGE_PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,

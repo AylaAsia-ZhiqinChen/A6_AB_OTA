@@ -16,10 +16,10 @@
 
 package com.system.ota;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import android.util.Log;
 
 import com.android.internal.util.Preconditions;
 
