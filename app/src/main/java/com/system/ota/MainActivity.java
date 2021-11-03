@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
     };
     private String otaUpdatePath = "/data/ota_package/update.zip";
     //    private String otaFilePath = "/storage/emulated/0/test/update.zip";
-    private String otaFilePath = "/data/data/com.aylaasia.a6_gateway/ota/update.zip";
+    private String otaFilePath = "/data/data/com.aylaasia.a6_gateway/ota/ota_gateway.zip";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
