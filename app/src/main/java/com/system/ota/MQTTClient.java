@@ -149,7 +149,7 @@ public class MQTTClient {
     /**
      * 连接Mqtt服务器
      */
-    public void connect() {
+    private void connect() {
         mqttService.connect(new IEasyMqttCallBack() {
             @Override
             public void messageArrived(String topic, String message, int qos) {
