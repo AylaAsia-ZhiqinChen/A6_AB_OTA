@@ -31,7 +31,7 @@ public class MQTTClient {
     /**
      * 构建EasyMqttService对象
      */
-    public void buildEasyMqttService(Context context) {
+    private void buildEasyMqttService(Context context) {
         mqttService = new EasyMqttService.Builder()
                 //设置自动重连
                 .autoReconnect(true)
@@ -115,12 +115,13 @@ public class MQTTClient {
      * 订阅主题 这里订阅三个主题分别是"a", "b", "c"
      */
     private void subscribe() {
-        String[] topics = new String[]{"/A6/OTA/queryInstall"};
         //主题对应的推送策略 分别是0, 1, 2 建议服务端和客户端配置的主题一致
         // 0 表示只会发送一次推送消息 收到不收到都不关心
         // 1 保证能收到消息，但不一定只收到一条
         // 2 保证收到切只能收到一条消息
         int[] qoss = new int[]{2};
+        String[] topics = new String[]{"/A6/OTA/queryInstall"};
+
         mqttService.subscribe(topics, qoss);
     }
 
@@ -152,10 +153,10 @@ public class MQTTClient {
         mqttService.connect(new IEasyMqttCallBack() {
             @Override
             public void messageArrived(String topic, String message, int qos) {
+                //推送消息到达
                 Log.d(TAG, "-> message = " + message);
                 Log.d(TAG, "-> topic = " + topic);
                 Log.d(TAG, "-> qos = " + qos);
-                //推送消息到达
             }
 
             @Override
@@ -167,8 +168,6 @@ public class MQTTClient {
             @Override
             public void deliveryComplete(IMqttDeliveryToken arg0) {
                 Log.d(TAG, "deliveryComplete!");
-
-
             }
 
             @Override
