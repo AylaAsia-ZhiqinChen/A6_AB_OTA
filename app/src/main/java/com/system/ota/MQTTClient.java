@@ -38,7 +38,7 @@ public class MQTTClient {
                 //设置不清除回话session 可收到服务器之前发出的推送消息
                 .cleanSession(false)
                 //唯一标示 保证每个设备都唯一就可以 建议 imei
-                .clientId("test")
+                .clientId("OTAReportClient")
                 //mqtt服务器地址 格式例如：tcp://10.0.261.159:1883
                 .serverUrl("tcp://127.0.0.1:1883")
                 //心跳包默认的发送间隔
@@ -98,6 +98,7 @@ public class MQTTClient {
         JSONObject msgJson = new JSONObject();
         msgJson.put("state", state);
         msgJson.put("progress", progress);
+        msgJson.put("stage", "install");
         String msg = msgJson.toString();
 
         //发布消息

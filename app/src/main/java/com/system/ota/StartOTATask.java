@@ -23,6 +23,11 @@ public class StartOTATask {
 
                 while (!MQTTClient.getInstance().isConnected()) {
                     Log.d(TAG, "MQTTClient isConnected fail!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 OTATask.getInstance().startOTA(mContext);
