@@ -29,12 +29,17 @@ public class OTATask {
     }
 
     public void startOTA(Context context) {
+        int otaProgress = 0;
+
+        MQTTClient.getInstance().setOTAProgressValue(0);
+        MQTTClient.getInstance().reportOTAInstallProgress(0, 0);
+
         File otaFile = new File(otaFilePath);
         if (!otaFile.exists()) {
             //没有找到升级包，升级失败
             Log.d(TAG, "无升级包");
 
-            int otaProgress = MQTTClient.getInstance().getOTAProgressValue();
+            otaProgress = MQTTClient.getInstance().getOTAProgressValue();
             MQTTClient.getInstance().reportOTAInstallProgress(-1, otaProgress);
 
             return;
@@ -51,12 +56,10 @@ public class OTATask {
             SystemUpdateManager mSystemUpdateManager = new SystemUpdateManager(context);
             mSystemUpdateManager.startUpdateSystem(mParsedUpdate);
             Log.d(TAG, "开始升级，请勿关机");
-
-            MQTTClient.getInstance().reportOTAInstallProgress(0, 0);
         } catch (Exception e) {
             Log.e(TAG, "e=" + e.toString());
 
-            int otaProgress = MQTTClient.getInstance().getOTAProgressValue();
+            otaProgress = MQTTClient.getInstance().getOTAProgressValue();
             MQTTClient.getInstance().reportOTAInstallProgress(-1, otaProgress);
         }
     }

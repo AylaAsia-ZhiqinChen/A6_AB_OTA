@@ -98,7 +98,10 @@ public class MQTTClient {
         JSONObject msgJson = new JSONObject();
         msgJson.put("state", state);
         msgJson.put("progress", progress);
+        msgJson.put("stage", "install");
         String msg = msgJson.toString();
+
+        Log.d(TAG, "msg = " + msg);
 
         //发布消息
         publish(msg, topic, qos, retained);
@@ -152,10 +155,10 @@ public class MQTTClient {
         mqttService.connect(new IEasyMqttCallBack() {
             @Override
             public void messageArrived(String topic, String message, int qos) {
+                //推送消息到达
                 Log.d(TAG, "-> message = " + message);
                 Log.d(TAG, "-> topic = " + topic);
                 Log.d(TAG, "-> qos = " + qos);
-                //推送消息到达
             }
 
             @Override
@@ -167,8 +170,6 @@ public class MQTTClient {
             @Override
             public void deliveryComplete(IMqttDeliveryToken arg0) {
                 Log.d(TAG, "deliveryComplete!");
-
-
             }
 
             @Override
