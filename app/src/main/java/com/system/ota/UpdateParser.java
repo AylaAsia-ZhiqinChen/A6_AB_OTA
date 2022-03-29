@@ -39,7 +39,7 @@ import java.util.zip.ZipFile;
  * Parse an A/B update zip file.
  */
 class UpdateParser {
-    private static final String TAG = "AB ota UpdateParser";
+    private static final String TAG = "A6_OTA " + "AB ota UpdateParser";
     private static final String PAYLOAD_BIN_FILE = "payload.bin";
     private static final String PAYLOAD_PROPERTIES = "payload_properties.txt";
     private static final String FILE_URL_PREFIX = "file://";

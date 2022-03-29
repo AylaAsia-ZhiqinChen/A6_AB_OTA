@@ -13,12 +13,17 @@ import android.content.Intent;
  * helper methods.
  */
 public class OTAReportService extends IntentService {
+    final String TAG = "A6_OTA " + this.getClass().getSimpleName();
+
+    private String networkOtaFilePath = "/data/data/com.aylaasia.a6_gateway/ota/ota_gateway.zip";
+    private String localOtaFilePath = "/sdcard/Download/ota_gateway.zip";
 
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_FOO = "com.system.ota.action.FOO";
     private static final String ACTION_BAZ = "com.system.ota.action.BAZ";
-    private static final String ACTION_REPORT_OTA_TASK = "com.system.ota.action.ReportOTAProgressTask";
+    private static final String ACTION_RUN_NETWORK_OTA_TASK = "com.system.ota.action.RunNetWorkOTATask";
+    private static final String ACTION_RUN_LOCAL_OTA_TASK = "com.system.ota.action.RunLocalOTATask";
 
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "com.system.ota.extra.PARAM1";
@@ -58,9 +63,15 @@ public class OTAReportService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startOTAReportTask(Context context) {
+    public static void startNetWorkOTATask(Context context) {
         Intent intent = new Intent(context, OTAReportService.class);
-        intent.setAction(ACTION_REPORT_OTA_TASK);
+        intent.setAction(ACTION_RUN_NETWORK_OTA_TASK);
+        context.startService(intent);
+    }
+
+    public static void startLocalOTATask(Context context) {
+        Intent intent = new Intent(context, OTAReportService.class);
+        intent.setAction(ACTION_RUN_LOCAL_OTA_TASK);
         context.startService(intent);
     }
 
@@ -76,8 +87,10 @@ public class OTAReportService extends IntentService {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM1);
                 final String param2 = intent.getStringExtra(EXTRA_PARAM2);
                 handleActionBaz(param1, param2);
-            } else if (ACTION_REPORT_OTA_TASK.equals(action)) {
-                StartOTATask.getInstance().otaTask(getApplicationContext());
+            } else if (ACTION_RUN_NETWORK_OTA_TASK.equals(action)) {
+                StartOTATask.getInstance().otaTask(getApplicationContext(), networkOtaFilePath);
+            } else if (ACTION_RUN_LOCAL_OTA_TASK.equals(action)) {
+                StartOTATask.getInstance().otaTask(getApplicationContext(), localOtaFilePath);
             }
         }
     }

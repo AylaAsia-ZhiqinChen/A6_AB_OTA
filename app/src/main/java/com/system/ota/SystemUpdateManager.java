@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 
 public class SystemUpdateManager {
-    final String TAG = this.getClass().getSimpleName();
+    final String TAG = "A6_OTA " + this.getClass().getSimpleName();
 
     UpdateEngine mUpdateEngine;
     private Context mContext;
@@ -49,6 +49,7 @@ public class SystemUpdateManager {
 
             switch (status) {
                 case UpdateEngine.UpdateStatusConstants.UPDATED_NEED_REBOOT:
+                    FileUtils.getInstance().deleteFile(FileUtils.OTA_LOCK_FILE_PATH);
                     rebootNow();
                     break;
                 // 回调状态，升级进度
@@ -77,6 +78,7 @@ public class SystemUpdateManager {
             if (errorCode == UpdateEngine.ErrorCodeConstants.SUCCESS) {// 回调状态
                 Log.d(TAG, "UPDATE SUCCESS!");
             } else {
+                FileUtils.getInstance().deleteFile(FileUtils.OTA_LOCK_FILE_PATH);
                 Looper.prepare();
                 Log.d(TAG, "升级包错误");
                 otaProgress = MQTTClient.getInstance().getOTAProgressValue();

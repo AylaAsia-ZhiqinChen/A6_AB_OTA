@@ -48,7 +48,7 @@ import androidx.core.content.ContextCompat;
  */
 
 public class MainActivity extends Activity {
-    final String TAG = this.getClass().getSimpleName();
+    final String TAG = "A6_OTA " + this.getClass().getSimpleName();
 
     // private Button abOTA;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0;
@@ -63,13 +63,15 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "checkSelfPermission ===false");
+            Log.d(TAG, "checkSelfPermission = false");
             ActivityCompat.requestPermissions(this, REQUIRED_STORAGE_PERMISSIONS, STORAGE_PERMISSIONS_REQUEST_CODE);
         } else {
-            Log.d(TAG, "checkSelfPermission ===true");
+            Log.d(TAG, "checkSelfPermission = true");
         }
 
-        OTAReportService.startOTAReportTask(getApplicationContext());
+        FileUtils.createInstance(getApplicationContext());
+        FileUtils.getInstance().saveTxt2Public(getApplicationContext(), "ota_install.lock", "", "Documents");
+        OTAReportService.startNetWorkOTATask(getApplicationContext());
     }
 
     @Override

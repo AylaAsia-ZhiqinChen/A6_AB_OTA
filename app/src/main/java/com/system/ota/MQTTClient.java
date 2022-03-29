@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MQTTClient {
-    final String TAG = this.getClass().getSimpleName();
+    final String TAG = "A6_OTA " + this.getClass().getSimpleName();
 
     private static final MQTTClient instance = new MQTTClient();
 

@@ -12,12 +12,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class OTATask {
-    final String TAG = this.getClass().getSimpleName();
+    final String TAG = "A6_OTA " + this.getClass().getSimpleName();
 
-    //    private String otaFilePath = "/storage/emulated/0/test/update.zip";
-    //    private String otaFilePath = "/data/local/tmp/update.zip";
     private String otaUpdatePath = "/data/ota_package/update.zip";
-    private String otaFilePath = "/data/data/com.aylaasia.a6_gateway/ota/ota_gateway.zip";
 
     private static final OTATask instance = new OTATask();
 
@@ -28,8 +25,10 @@ public class OTATask {
         return instance;
     }
 
-    public void startOTA(Context context) {
+    public void startOTA(Context context, String otaFilePath) {
         int otaProgress = 0;
+
+        Log.d(TAG, "otaFilePath = " + otaFilePath);
 
         MQTTClient.getInstance().setOTAProgressValue(0);
         MQTTClient.getInstance().reportOTAInstallProgress(0, 0);
@@ -38,6 +37,8 @@ public class OTATask {
         if (!otaFile.exists()) {
             //没有找到升级包，升级失败
             Log.d(TAG, "无升级包");
+
+            FileUtils.getInstance().deleteFile(FileUtils.OTA_LOCK_FILE_PATH);
 
             otaProgress = MQTTClient.getInstance().getOTAProgressValue();
             MQTTClient.getInstance().reportOTAInstallProgress(-1, otaProgress);
@@ -48,6 +49,9 @@ public class OTATask {
         if (1 == CopySdcardFile(otaFilePath, otaUpdatePath)) {
             otaFile.delete();
             execRootCmd("chmod 0666" + otaUpdatePath);
+        } else {
+            Log.d(TAG, "CopySdcardFile Failure!");
+            FileUtils.getInstance().deleteFile(FileUtils.OTA_LOCK_FILE_PATH);
         }
 
         try {
@@ -58,6 +62,7 @@ public class OTATask {
             Log.d(TAG, "开始升级，请勿关机");
         } catch (Exception e) {
             Log.e(TAG, "e=" + e.toString());
+            FileUtils.getInstance().deleteFile(FileUtils.OTA_LOCK_FILE_PATH);
 
             otaProgress = MQTTClient.getInstance().getOTAProgressValue();
             MQTTClient.getInstance().reportOTAInstallProgress(-1, otaProgress);
